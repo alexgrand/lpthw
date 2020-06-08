@@ -2,7 +2,7 @@ from sys import argv
 
 script, filename = argv
 
-txt = open(filename)
+txt = open(filename, encoding="utf-8")
 
 print(f"Here's your file {filename}:")
 print(txt.read())
