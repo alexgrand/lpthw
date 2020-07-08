@@ -2,7 +2,8 @@ import shutil
 from sys import exit
 from read import convert_file_to_steps
 
-quest_steps = convert_file_to_steps('quest_text.txt')
+# quest_steps = convert_file_to_steps('quest_text.txt')
+quest_steps = convert_file_to_steps('Gobsaur.txt')
 # terminal_size = list(shutil.get_terminal_size((80, 20)))[0]
 max_line_size = 70
 

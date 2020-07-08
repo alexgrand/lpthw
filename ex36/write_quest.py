@@ -95,8 +95,21 @@ def write_quest_options():
 
     return options
 
-def write_quest_step():
-    step_data = {}
+def has_another_scene():
+    print("\nЕсть ли еще сцены в этом квесте?")
+    print("1. Да.")
+    print("2. Нет.")
+    has_scene = input("> ")
+
+    if has_scene == '1':
+        return True
+    elif has_scene == '2':
+        return
+    else:
+        print("\n--- ВВЕДИТЕ ПРАВИЛЬНЫЙ ОТВЕТ ---")
+        return has_another_scene()
+
+def write_quest_step(step_data):
     step_name = write_step_name()
     step_text = write_step_text()
     
@@ -108,11 +121,14 @@ def write_quest_step():
 
     check_mistakes(step_data, step_name)
 
+    if has_another_scene():
+        step_data = write_quest_step(step_data)
+
     return step_data
 
 def write_quest_data():
     data = {}
-    write_quest_step()
+    write_quest_step(data)
 
     return data
 
@@ -132,32 +148,49 @@ def write_quest_name():
         print("\n--- ВВЕДИТЕ ПРАВИЛЬНЫЙ ОТВЕТ ---")
         return write_quest_name()
 
+def convert_data_str(quest_data):
+    str_data = ''
+    
+    for name in quest_data:
+        str_data += f"[name]{name}[name]"
+        str_data += f"[text]{quest_data[name]['text']}[text]"
+        
+        decisions = quest_data[name]['decisions']
+        next_steps = quest_data[name]['next_steps']
+        str_data += "[decisions]"
+
+        for i in range(0, len(decisions)):
+            str_data += f"[option]{decisions[i]}[option]"
+            str_data += f"[next_step]{next_steps[i]}[next_step]"
+        
+        str_data += "[decisions]\n"
+    
+    return str_data
+        
+def write_to_file(fl_name, fl_data):
+    str_data = convert_data_str(fl_data)
+    fl = open(f"{fl_name}.txt", 'w', encoding='utf-8')
+    fl.write(str_data)
+    fl.close()
+
 def write_new_quest():
     quest_name = write_quest_name()
     quest_data = write_quest_data()
+
+    write_to_file(quest_name, quest_data)
     
-def new_or_edit():
+def start():
     print("\nЧто Вы хотите сделать?\n")
     print("1. Написать новый квест.")
     print("2. Изменить существующий квест.")
     new_quest = input(">> ")
 
     if new_quest == '1':
-        return True
+       write_new_quest()
     elif new_quest == '2':
-        return
+        print("Изменим квест")
     else:
         print("\n---ВВЕДИТЕ ПРАВИЛЬНЫЙ ОТВЕТ. ЕСЛИ ХОТИТЕ ВЫЙТИ НАЖМИТЕ ctrl-z")
-        return new_or_edit()
-
-def start():
-    new_quest = new_or_edit()
-    
-    if new_quest:
-        write_new_quest()
-    else:
-        print("Изменим квест")
-
-
+        return start()
 
 start()

@@ -20,15 +20,15 @@ def get_data(line, data_name):
 def convert_file_to_steps(quest_name):
     q_steps = {}
     lines = read_file(quest_name)
+    index = 0
 
     for line in lines:
-        name = get_data(line, '[name]')[0]
-        text = get_data(line, '[text]')[0]
-        options = get_data(line, '[option]')
-        steps = get_data(line, '[next_step]')
+        if line:
+            name = get_data(line, '[name]')[0]
+            text = get_data(line, '[text]')[0]
+            options = get_data(line, '[option]')
+            steps = get_data(line, '[next_step]')
 
-        q_steps[name] = {'text': text, 'decisions': options, 'next_steps': steps}
+            q_steps[name] = {'text': text, 'decisions': options, 'next_steps': steps}
     
     return q_steps
-
-steps = convert_file_to_steps('quest_text.txt')
