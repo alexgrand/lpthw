@@ -1,7 +1,7 @@
 from sys import exit
 from read import convert_file_to_data
 
-def add_scene(quest_data):
+def change_scene(quest_data):
     scene_names_list = list(quest_data.keys())
     print('\nВыберите сцену которую хотите изменить: ')
     print(f"{scene_names_list}")
@@ -9,7 +9,7 @@ def add_scene(quest_data):
 
     if not scene_names_list.__contains__(scene_to_change):
         print("\nТакой сцены не существует. Введите данные правильно.")
-        return add_scene(quest_data)
+        return change_scene(quest_data)
     
     edit_scene(quest_data, scene_to_change)
 
@@ -120,7 +120,8 @@ def write_quest_options():
 
     return options
 
-def has_another_scene():
+def has_another_scene(quest_data, scene_name):
+    scene_data = quest_data.get(scene_name)
     print("\nЕсть ли еще сцены в этом квесте?")
     print("1. Да.")
     print("2. Нет.")
@@ -129,13 +130,30 @@ def has_another_scene():
     if has_scene == '1':
         return True
     elif has_scene == '2':
+        i = 0
+        decisions = scene_data.get('decisions')
+        next_scenes = scene_data.get('next_scenes')
+
+        for option in next_scenes:
+            if not list(quest_data.keys()).__contains__(option) and not option == '':
+                print("\n\t\t\tВНИМАНИЕ!\n")
+                print("\t", f"У вас отсутствует сцена [{option}] для варианта ответа [{decisions[i]}]")
+                print("\tНапишите соответствующую сцену.")
+                write_scene(quest_data)
+            
+            i += 1
+
         return
     else:
         print("\n--- ВВЕДИТЕ ПРАВИЛЬНЫЙ ОТВЕТ ---")
-        return has_another_scene()
+        return has_another_scene(quest_data, scene_name)
 
 def write_scene(quest_data):
-    scene_name = write_scene_name(quest_data)
+    if not quest_data:
+        scene_name = 'Begining'
+    else:
+        scene_name = write_scene_name(quest_data)
+        
     scene_text = write_scene_text()
     
     options = write_quest_options()
@@ -146,7 +164,7 @@ def write_scene(quest_data):
 
     check_mistakes(quest_data, scene_name)
 
-    if has_another_scene():
+    if has_another_scene(quest_data, scene_name):
         quest_data = write_scene(quest_data)
 
     return quest_data
@@ -213,7 +231,7 @@ def open_quest_file(fl_name):
         print(f"\n\tОШИБКА! Квест с именем ** {fl_name} ** не существует.\n")
         exit(0)
 
-def edit_or_add_scene(quest_name, quest_data):
+def edit_or_change_scene(quest_name, quest_data):
     scene_names_list = list(quest_data.keys())
     print('\nВ квесте уже есть следующие сцены:\n')
     print(f"{scene_names_list}")
@@ -223,21 +241,21 @@ def edit_or_add_scene(quest_name, quest_data):
     edit_or_add = input("> ")
 
     if edit_or_add == '1':
-        quest_data = add_scene(quest_data)
+        quest_data = change_scene(quest_data)
         write_to_file(quest_name, quest_data)
     elif edit_or_add == '2':
         quest_data = write_scene(quest_data)
         write_to_file(quest_name, quest_data)
     else:
         print("\n--- ВВЕДИТЕ ПРАВИЛЬНЫЙ ОТВЕТ ---")
-        edit_or_add_scene(quest_name, quest_data)
+        edit_or_change_scene(quest_name, quest_data)
 
 def edit_quest_data():
     print("\nКакой квест вы хотите изменить? Введите название.")
     quest_name = input("> ")
     data = open_quest_file(quest_name)
 
-    edit_or_add_scene(quest_name, data)
+    edit_or_change_scene(quest_name, data)
 
 def start():
     print("\nЧто Вы хотите сделать?\n")

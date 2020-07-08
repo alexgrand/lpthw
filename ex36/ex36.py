@@ -2,8 +2,6 @@ import shutil
 from sys import exit
 from read import convert_file_to_data
 
-# quest_scenes = convert_file_to_scenes('quest_text.txt')
-quest_scenes = convert_file_to_data('Gobsaur.txt')
 # terminal_size = list(shutil.get_terminal_size((80, 20)))[0]
 max_line_size = 70
 
@@ -37,13 +35,20 @@ def print_decisions(scene_data):
         string = decision.split(' ')
         print(format_line(string))
 
-def print_scene(scene_name):
-    scene_data = quest_scenes.get(scene_name)    
+def print_scene(scene_name, quest_data):
+    scene_data = quest_data.get(scene_name)    
     print_text(scene_data)
     print_decisions(scene_data)
     
     
 def start_quest():
-    print_scene('Begining')
+    print('Введите название квеста, который хотите пройти.')
+    quest_name = input("> ")
+
+    try:
+        quest_data = convert_file_to_data(f"{quest_name}.txt")
+        print_scene('Begining', quest_data)
+    except:
+        print("\nТакого квеста нет.")
 
 start_quest()
