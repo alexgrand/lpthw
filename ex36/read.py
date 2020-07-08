@@ -17,18 +17,17 @@ def get_data(line, data_name):
 
     return data
 
-def convert_file_to_steps(quest_name):
-    q_steps = {}
+def convert_file_to_data(quest_name):
+    quest_scenes = {}
     lines = read_file(quest_name)
-    index = 0
 
     for line in lines:
         if line:
             name = get_data(line, '[name]')[0]
             text = get_data(line, '[text]')[0]
             options = get_data(line, '[option]')
-            steps = get_data(line, '[next_step]')
+            scenes = get_data(line, '[next_scene]')
 
-            q_steps[name] = {'text': text, 'decisions': options, 'next_steps': steps}
+            quest_scenes[name] = {'text': text, 'decisions': options, 'next_scenes': scenes}
     
-    return q_steps
+    return quest_scenes

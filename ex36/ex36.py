@@ -1,9 +1,9 @@
 import shutil
 from sys import exit
-from read import convert_file_to_steps
+from read import convert_file_to_data
 
-# quest_steps = convert_file_to_steps('quest_text.txt')
-quest_steps = convert_file_to_steps('Gobsaur.txt')
+# quest_scenes = convert_file_to_scenes('quest_text.txt')
+quest_scenes = convert_file_to_data('Gobsaur.txt')
 # terminal_size = list(shutil.get_terminal_size((80, 20)))[0]
 max_line_size = 70
 
@@ -23,12 +23,12 @@ def format_line(words_list):
 
     return line
 
-def print_text(step_data):
-    text = step_data.get('text').split(' ')
+def print_text(scene_data):
+    text = scene_data.get('text').split(' ')
     print(format_line(text))
 
-def print_decisions(step_data):
-    decisions = step_data.get('decisions')
+def print_decisions(scene_data):
+    decisions = scene_data.get('decisions')
     index = 0
 
     for decision in decisions:
@@ -37,13 +37,13 @@ def print_decisions(step_data):
         string = decision.split(' ')
         print(format_line(string))
 
-def print_step(step_name):
-    step_data = quest_steps.get(step_name)    
-    print_text(step_data)
-    print_decisions(step_data)
+def print_scene(scene_name):
+    scene_data = quest_scenes.get(scene_name)    
+    print_text(scene_data)
+    print_decisions(scene_data)
     
     
 def start_quest():
-    print_step('Start')
+    print_scene('Begining')
 
 start_quest()
