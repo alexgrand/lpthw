@@ -257,16 +257,50 @@ def edit_quest_data():
 
     edit_or_change_scene(quest_name, data)
 
+def get_scene(quest_data):
+    print("\nКакую сцену Вы хотите просмотреть?")
+    choice = input("> ")
+    
+    try:
+        choice = int(choice)
+        scene_name = list(quest_data.keys())[choice]
+
+        check_mistakes(quest_data, scene_name)
+    except:
+        print("\n\t\t---ОШИБКА. ВВЕДИТЕ ПРАВИЛЬНЫЙ НОМЕР СЦЕНЫ---")
+        get_scene(quest_data)
+        exit(0)
+
+def check_scenes():
+    print("\nКакой квест вы хотите просмотреть? Введите название.")
+    quest_name = input("> ")
+    data = open_quest_file(quest_name)
+
+    print("\nВ указанном Вами квесте существуют следующие сцены: \n")
+    
+    scenes_list = list(data.keys())
+    i = 0
+
+    for scene_name in scenes_list:
+        print(f"\t{i}. {scene_name}")
+        i += 1
+    
+    get_scene(data)
+    write_to_file(quest_name, data)
+    
 def start():
     print("\nЧто Вы хотите сделать?\n")
     print("1. Написать новый квест.")
     print("2. Изменить существующий квест.")
-    new_quest = input(">> ")
+    print("3. Прочитать сцены квеста")
+    choice = input(">> ")
 
-    if new_quest == '1':
+    if choice == '1':
         write_new_quest()
-    elif new_quest == '2':
+    elif choice == '2':
         edit_quest_data()
+    elif choice == '3':
+        check_scenes()
     else:
         print("\n---ВВЕДИТЕ ПРАВИЛЬНЫЙ ОТВЕТ. ЕСЛИ ХОТИТЕ ВЫЙТИ НАЖМИТЕ ctrl-z")
         return start()
