@@ -1,10 +1,19 @@
 from sys import exit
 from read import convert_file_to_data
 
+def print_scene_names(data):
+    print("\nВ этом квесте существуют следующие сцены: \n")
+    scenes_list = list(data.keys())
+    i = 0
+
+    for scene_name in scenes_list:
+        print(f"\t{i}. {scene_name}")
+        i += 1
+
 def change_scene(quest_data):
     scene_names_list = list(quest_data.keys())
     print('\nВыберите сцену которую хотите изменить: ')
-    print(f"{scene_names_list}")
+    print_scene_names(quest_data)
     scene_to_change = input("> ")
 
     if not scene_names_list.__contains__(scene_to_change):
@@ -266,25 +275,25 @@ def get_scene(quest_data):
         scene_name = list(quest_data.keys())[choice]
 
         check_mistakes(quest_data, scene_name)
+
+        print("\nЖелаете просмотреть еще какую либо сцену?")
+        print("1. Да")
+        print("2. Нет")
+        choice = input("> ")
+
+        if choice == '1' or choice == '':
+            print_scene_names(quest_data)
+            get_scene(quest_data)
     except:
         print("\n\t\t---ОШИБКА. ВВЕДИТЕ ПРАВИЛЬНЫЙ НОМЕР СЦЕНЫ---")
         get_scene(quest_data)
-        exit(0)
 
 def check_scenes():
     print("\nКакой квест вы хотите просмотреть? Введите название.")
     quest_name = input("> ")
     data = open_quest_file(quest_name)
-
-    print("\nВ указанном Вами квесте существуют следующие сцены: \n")
     
-    scenes_list = list(data.keys())
-    i = 0
-
-    for scene_name in scenes_list:
-        print(f"\t{i}. {scene_name}")
-        i += 1
-    
+    print_scene_names(data)
     get_scene(data)
     write_to_file(quest_name, data)
     
