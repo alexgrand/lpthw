@@ -70,14 +70,12 @@ def play(quest_data, scene_name):
         try:
             choice = int(choice)
             next_scene_name = next_scenes[choice - 1]
-        
+
+            print_scene(next_scene_name, quest_data)
+            play(quest_data, next_scene_name)        
         except:
             print("\n\n\t\t---ВВЕДИТЕ ПРАВИЛЬНЫЙ ОТВЕТ---\n")
             play(quest_data, scene_name)
-            exit(0)
-        
-        print_scene(next_scene_name, quest_data)
-        play(quest_data, next_scene_name)
     
     else:
         return
@@ -95,6 +93,6 @@ def start_quest():
     print_quest_name(quest_name)
     print_scene('Begining', quest_data)
     play(quest_data, 'Begining')
-    print_quest_name(quest_name)
+    print_quest_name('END')
 
 start_quest()
